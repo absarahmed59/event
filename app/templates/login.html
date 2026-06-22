@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EliteEvents</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @layer base {
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #ffffff;
+                color: #0f172a;
+            }
+            .font-serif {
+                font-family: 'Playfair Display', serif;
+            }
+        }
+        
+        :root {
+            --gold-600: #b8860b;
+        }
+
+        .text-gold-600 { color: #b8860b; }
+        .bg-gold-600 { background-color: #b8860b; }
+        .hover\:text-gold-600:hover { color: #b8860b; }
+        .hover\:bg-gold-600:hover { background-color: #b8860b; }
+        .border-gold-600 { border-color: #b8860b; }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-nav border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <a href="/" class="flex-shrink-0">
+                    <span class="text-3xl font-bold tracking-tighter text-gray-900 font-serif">
+                        ELITE<span class="text-gold-600">EVENTS</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-20">
+        <div class="flex min-h-[calc(100vh-80px)] overflow-hidden">
+            <!-- Visual Side -->
+            <div class="hidden lg:flex w-1/2 bg-slate-900 relative items-center justify-center p-12">
+                <div class="absolute inset-0 z-0 opacity-40">
+                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover" alt="Event Atmosphere">
+                </div>
+                <div class="relative z-10 text-center text-white max-w-md">
+                    <h2 class="text-5xl font-serif font-bold mb-6">Welcome Back to Elite</h2>
+                    <p class="text-gray-300 text-lg font-light italic">"Details are not the details. They make the design."</p>
+                </div>
+            </div>
+
+            <!-- Form Side -->
+            <div class="w-full lg:w-1/2 flex flex-col justify-center p-8 md:p-16 lg:p-24 bg-white">
+                <div class="max-w-md w-full mx-auto">
+                    <div>
+                        <h1 class="text-4xl font-serif font-bold text-slate-900 mb-2">Sign In</h1>
+                        <p class="text-gray-500 mb-8 font-sans text-sm">Enter your credentials to access your event dashboard.</p>
+
+                        <form action="{% url 'login' %}" method="post" class="space-y-6" action="dashboard.html">
+                            {% csrf_token %}
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 uppercase tracking-wider mb-2">Username</label>
+                                <div class="relative">
+                                    <i data-lucide="username" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                                    <input name="username" type="text" class="w-full pl-10 pr-4 py-3 rounded-none border-b-2 border-gray-200 focus:border-gold-600 outline-none transition-colors" placeholder="janedoe" required>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 uppercase tracking-wider mb-2">Password</label>
+                                <div class="relative">
+                                    <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                                    <input name="password" type="password" class="w-full pl-10 pr-4 py-3 rounded-none border-b-2 border-gray-200 focus:border-gold-600 outline-none transition-colors" placeholder="••••••••" required>
+                                </div>
+                            </div>
+
+                            {% comment %} <div class="flex items-center justify-between text-sm">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" class="accent-gold-600">
+                                    <span class="text-gray-600">Remember me</span>
+                                </label>
+                                <a href="#" class="text-gold-600 hover:text-gold-700 font-semibold">Forgot Password?</a>
+                            </div> {% endcomment %}
+
+                            <button type="submit" class="w-full bg-slate-900 text-white py-4 flex items-center justify-center gap-2 hover:bg-gold-600 transition-colors uppercase tracking-[0.2em] font-bold">
+                                Sign In <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                            </button>
+                        </form>
+
+                        <p class="mt-8 text-center text-gray-600 text-sm">
+                            Don't have an account? <a href="/signup/" class="text-gold-600 font-bold hover:underline">Create Account</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

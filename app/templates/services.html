@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - EliteEvents</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @layer base {
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #fcfbf9;
+                color: #1a1a1a;
+            }
+            .font-serif {
+                font-family: 'Playfair Display', serif;
+            }
+        }
+        
+        :root {
+            --gold-600: #b8860b;
+        }
+
+        .text-gold-600 { color: #b8860b; }
+        .bg-gold-600 { background-color: #b8860b; }
+        .hover\:text-gold-600:hover { color: #b8860b; }
+        .hover\:bg-gold-600:hover { background-color: #b8860b; }
+        .border-gold-600 { border-color: #b8860b; }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .category-btn.active {
+            background-color: #b8860b;
+            color: white;
+            border-color: #b8860b;
+        }
+
+        .service-card {
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    {% include "navbar.html" %}
+
+    <main class="pt-20">
+        <!-- Hero -->
+        <section class="py-20 bg-slate-900 text-white">
+            <div class="max-w-7xl mx-auto px-8 text-center">
+                <h1 class="text-5xl md:text-7xl font-serif font-bold mb-6 italic">Our Masterful Services</h1>
+                <p class="text-slate-400 max-w-2xl mx-auto font-sans text-lg">From architectural planning to final execution, we curate luxury experiences tailored to your most ambitious visions.</p>
+            </div>
+        </section>
+
+        <!-- Filter & Search -->
+        <section class="py-12 sticky top-20 z-40 bg-[#fcfbf9]/95 backdrop-blur border-b border-gray-100">
+            <div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div id="filters" class="flex flex-wrap gap-3 justify-center">
+                    <button class="category-btn active px-6 py-2 rounded-full border border-gray-300 text-sm font-bold uppercase tracking-widest transition-all" data-category="all">All</button>
+                </div>
+                {% comment %} <div class="relative w-full md:w-64">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                    <input type="text" id="search-input" placeholder="Search services..." class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-full text-sm outline-none focus:border-gold-600 transition">
+                </div> {% endcomment %}
+            </div>
+        </section>
+
+        <!-- Services Grid -->
+        <section class="py-24 max-w-7xl mx-auto px-8">
+            <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                {% for service in services %}
+                    <div class="service-card bg-white rounded-3xl overflow-hidden border border-gray-100 fade-in" style="animation-delay: ${idx * 0.05}s">
+                        <div class="relative h-64 overflow-hidden">
+                            {% if service.cover_picture %}
+                                <img src="{{service.cover_picture.url}}" class="w-full h-full object-cover" alt="{{service.title}}">
+                            {% endif %}
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900 shadow-sm">
+                               ${{ service.costs }}
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <div class="flex gap-3 mb-4">
+                                {% comment %} {% for tag in service.tags %}
+                                    <span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#{{tag}}</span>
+                                {% endfor %} {% endcomment %}
+                            </div>
+                            <h3 class="text-2xl font-serif font-bold text-slate-900 mb-3"> {{service.title}} </h3>
+                            <p class="text-slate-500 font-sans text-sm mb-8 leading-relaxed line-clamp-2"> {{service.description}} </p>
+                            <a href="{% url "package" service.id %}" class="inline-flex items-center gap-2 font-bold uppercase tracking-widest text-xs text-gold-600 hover:text-black transition">
+                                Tune My Package <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                <!-- Service Cards will be injected by JS -->
+            </div>
+            <div id="no-results" class="hidden text-center py-20">
+                <i data-lucide="search-x" class="mx-auto w-12 h-12 text-gray-300 mb-4"></i>
+                <p class="text-gray-500 font-serif text-2xl italic">No services matching your criteria were found.</p>
+            </div>
+        </section>
+
+
+        <section class="py-12 sticky top-20 z-40 bg-[#fcfbf9]/95 backdrop-blur border-b border-gray-100">
+            <div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div id="filters" class="flex flex-wrap gap-3 justify-center">
+                   
+                    <button class="category-btn px-6 py-2 rounded-full border border-gray-300 text-sm font-bold uppercase tracking-widest transition-all hover:border-gold-600" data-category="wedding">Weddings</button>
+                    
+                </div>
+                {% comment %} <div class="relative w-full md:w-64">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                    <input type="text" id="search-input" placeholder="Search services..." class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-full text-sm outline-none focus:border-gold-600 transition">
+                </div> {% endcomment %}
+            </div>
+        </section>
+
+        <!-- Services Grid -->
+        <section class="py-24 max-w-7xl mx-auto px-8">
+            <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                {% for service in services %}
+                {% if service.category == 'Wedding' %}
+                <div class="service-card bg-white rounded-3xl overflow-hidden border border-gray-100 fade-in" style="animation-delay: ${idx * 0.05}s">
+                    <div class="relative h-64 overflow-hidden">
+                            {% if service.cover_picture %}
+                                <img src="{{service.cover_picture.url}}" class="w-full h-full object-cover" alt="{{service.title}}">
+                            {% endif %}
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900 shadow-sm">
+                               ${{ service.costs }}
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <div class="flex gap-3 mb-4">
+                                {% comment %} {% for tag in service.tags %}
+                                    <span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#{{tag}}</span>
+                                {% endfor %} {% endcomment %}
+                            </div>
+                            <h3 class="text-2xl font-serif font-bold text-slate-900 mb-3"> {{service.title}} </h3>
+                            <p class="text-slate-500 font-sans text-sm mb-8 leading-relaxed line-clamp-2"> {{service.description}} </p>
+                            <a href="{% url "package" service.id %}" class="inline-flex items-center gap-2 font-bold uppercase tracking-widest text-xs text-gold-600 hover:text-black transition">
+                                Tune My Package <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    <!-- Service Cards will be injected by JS -->
+                </div>
+                <div id="no-results" class="hidden text-center py-20">
+                    <i data-lucide="search-x" class="mx-auto w-12 h-12 text-gray-300 mb-4"></i>
+                    <p class="text-gray-500 font-serif text-2xl italic">No services matching your criteria were found.</p>
+                </div>
+        </section>
+        <section class="py-12 sticky top-20 z-40 bg-[#fcfbf9]/95 backdrop-blur border-b border-gray-100">
+            <div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div id="filters" class="flex flex-wrap gap-3 justify-center">
+                    <button class="category-btn px-6 py-2 rounded-full border border-gray-300 text-sm font-bold uppercase tracking-widest transition-all hover:border-gold-600" data-category="corporate">Corporate</button>
+
+                </div>
+                {% comment %} <div class="relative w-full md:w-64">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                    <input type="text" id="search-input" placeholder="Search services..." class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-full text-sm outline-none focus:border-gold-600 transition">
+                </div> {% endcomment %}
+            </div>
+        </section>
+
+        <!-- Services Grid -->
+        <section class="py-24 max-w-7xl mx-auto px-8">
+            <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                {% for service in services %}
+                {% if service.category == 'Corporate' %}
+                <div class="service-card bg-white rounded-3xl overflow-hidden border border-gray-100 fade-in" style="animation-delay: ${idx * 0.05}s">
+                    <div class="relative h-64 overflow-hidden">
+                            {% if service.cover_picture %}
+                                <img src="{{service.cover_picture.url}}" class="w-full h-full object-cover" alt="{{service.title}}">
+                            {% endif %}
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900 shadow-sm">
+                               ${{ service.costs }}
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <div class="flex gap-3 mb-4">
+                                {% comment %} {% for tag in service.tags %}
+                                    <span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#{{tag}}</span>
+                                {% endfor %} {% endcomment %}
+                            </div>
+                            <h3 class="text-2xl font-serif font-bold text-slate-900 mb-3"> {{service.title}} </h3>
+                            <p class="text-slate-500 font-sans text-sm mb-8 leading-relaxed line-clamp-2"> {{service.description}} </p>
+                            <a href="{% url "package" service.id %}" class="inline-flex items-center gap-2 font-bold uppercase tracking-widest text-xs text-gold-600 hover:text-black transition">
+                                Tune My Package <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                <!-- Service Cards will be injected by JS -->
+            </div>
+            <div id="no-results" class="hidden text-center py-20">
+                <i data-lucide="search-x" class="mx-auto w-12 h-12 text-gray-300 mb-4"></i>
+                <p class="text-gray-500 font-serif text-2xl italic">No services matching your criteria were found.</p>
+            </div>
+        </section>
+        <section class="py-12 sticky top-20 z-40 bg-[#fcfbf9]/95 backdrop-blur border-b border-gray-100">
+            <div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div id="filters" class="flex flex-wrap gap-3 justify-center">
+                    <button class="category-btn px-6 py-2 rounded-full border border-gray-300 text-sm font-bold uppercase tracking-widest transition-all hover:border-gold-600" data-category="others">Others</button>
+                </div>
+                {% comment %} <div class="relative w-full md:w-64">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                    <input type="text" id="search-input" placeholder="Search services..." class="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-full text-sm outline-none focus:border-gold-600 transition">
+                </div> {% endcomment %}
+            </div>
+        </section>
+
+        <!-- Services Grid -->
+        <section class="py-24 max-w-7xl mx-auto px-8">
+            <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                {% for service in services %}
+                    {% if service.category == 'Others' %}
+                <div class="service-card bg-white rounded-3xl overflow-hidden border border-gray-100 fade-in" style="animation-delay: ${idx * 0.05}s">
+                    <div class="relative h-64 overflow-hidden">
+                            {% if service.cover_picture %}
+                                <img src="{{service.cover_picture.url}}" class="w-full h-full object-cover" alt="{{service.title}}">
+                            {% endif %}
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900 shadow-sm">
+                               ${{ service.costs }}
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <div class="flex gap-3 mb-4">
+                                {% comment %} {% for tag in service.tags %}
+                                    <span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#{{tag}}</span>
+                                {% endfor %} {% endcomment %}
+                            </div>
+                            <h3 class="text-2xl font-serif font-bold text-slate-900 mb-3"> {{service.title}} </h3>
+                            <p class="text-slate-500 font-sans text-sm mb-8 leading-relaxed line-clamp-2"> {{service.description}} </p>
+                            <a href="{% url "package" service.id %}" class="inline-flex items-center gap-2 font-bold uppercase tracking-widest text-xs text-gold-600 hover:text-black transition">
+                                Tune My Package <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                <!-- Service Cards will be injected by JS -->
+            </div>
+            <div id="no-results" class="hidden text-center py-20">
+                <i data-lucide="search-x" class="mx-auto w-12 h-12 text-gray-300 mb-4"></i>
+                <p class="text-gray-500 font-serif text-2xl italic">No services matching your criteria were found.</p>
+            </div>
+        </section>
+
+        <!-- Dynamic Proposal CTA -->
+        {% comment %} <section class="py-20 bg-slate-50 border-t border-gray-200">
+            <div class="max-w-4xl mx-auto px-8 text-center">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-900 mb-6">Can't find exactly what you need?</h2>
+                <p class="text-gray-600 mb-10 text-lg">We specialize in bespoke, custom-built event solutions. Let's design something entirely unique for you.</p>
+                <a href="signup.html" class="inline-flex items-center gap-3 bg-black text-white px-10 py-4 rounded-full font-bold uppercase tracking-widest hover:bg-gold-600 transition-colors">
+                    Request Custom Proposal <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </section> {% endcomment %}
+    </main>
+
+    <footer class="bg-white pt-16 pb-8 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-400 text-sm font-sans">
+            &copy; 2026 EliteEvents Solutions. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        const SERVICES_DATA = [
+            {
+                id: 'wedding-garden',
+                category: 'wedding',
+                title: 'Garden Romance Package',
+                price: 'From $7,500',
+                desc: 'Ethereal outdoor ceremonies with botanical styling and intimate reception coordination.',
+                img: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80',
+                tags: ['Outdoor', 'Intimate']
+            },
+            {
+                id: 'corp-gala',
+                category: 'corporate',
+                title: 'Corporate Excellence Gala',
+                price: 'From $8,000',
+                desc: 'Professional event management focusing on brand alignment and executive networking logistics.',
+                img: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=800&q=80',
+                tags: ['Branding', 'Logistics']
+            },
+            {
+                id: 'corp-retreat',
+                category: 'corporate',
+                title: 'Leadership Strategy Retreat',
+                price: 'From $12,000',
+                desc: 'Exclusive off-site experiences designed to foster innovation and executive team building.',
+                img: 'https://images.unsplash.com/photo-1540575861501-7ad05823c23d?auto=format&fit=crop&w=800&q=80',
+                tags: ['Executive', 'Private']
+            },
+            {
+                id: 'private-soiree',
+                category: 'private',
+                title: 'Intimate Private Soiree',
+                price: 'From $3,500',
+                desc: 'Bespoke home celebrations and themed dinners for your inner circle.',
+                img: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80',
+                tags: ['Home', 'Themed']
+            },
+            {
+                id: 'private-anniversary',
+                category: 'private',
+                title: 'Diamond Jubilee Milestone',
+                price: 'From $6,000',
+                desc: 'Celebrating legacy with curated entertainment, gourmet catering, and luxury transformations.',
+                img: 'https://images.unsplash.com/photo-1496337589254-7e19d01ced44?auto=format&fit=crop&w=800&q=80',
+                tags: ['Celebration', 'Legacy']
+            },
+            {
+                id: 'consulting-venue',
+                category: 'consulting',
+                title: 'Elite Venue Scouting',
+                price: 'From $1,500',
+                desc: 'Access to off-market venues and rigorous audits of infrastructure for your peace of mind.',
+                img: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80',
+                tags: ['Architecture', 'Audits']
+            },
+            {
+                id: 'consulting-vendor',
+                category: 'consulting',
+                title: 'Master Vendor Curation',
+                price: 'From $2,000',
+                desc: 'Connecting you with world-class artisans, from Michelin chefs to lighting designers.',
+                img: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80',
+                tags: ['Artisans', 'Network']
+            }
+        ];
+
+        let currentCategory = 'all';
+        let searchQuery = '';
+/*
+        function renderServices() {
+            const grid = document.getElementById('services-grid');
+            const noResults = document.getElementById('no-results');
+            
+            const filtered = SERVICES_DATA.filter(s => {
+                const matchesCategory = currentCategory === 'all' || s.category === currentCategory;
+                const matchesSearch = s.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                    s.desc.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+                grid.innerHTML = filtered.map((s, idx) => `
+                    <div class="service-card bg-white rounded-3xl overflow-hidden border border-gray-100 fade-in" style="animation-delay: ${idx * 0.05}s">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="${s.img}" class="w-full h-full object-cover" alt="${s.title}">
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900 shadow-sm">
+                                ${s.price}
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <div class="flex gap-3 mb-4">
+                                ${s.tags.map(t => `<span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#${t}</span>`).join('')}
+                            </div>
+                            <h3 class="text-2xl font-serif font-bold text-slate-900 mb-3">${s.title}</h3>
+                            <p class="text-slate-500 font-sans text-sm mb-8 leading-relaxed line-clamp-2">${s.desc}</p>
+                            <a href="packagetuning.html?packageId=${s.id}" class="inline-flex items-center gap-2 font-bold uppercase tracking-widest text-xs text-gold-600 hover:text-black transition">
+                                Tune My Package <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            lucide.createIcons();
+        }
+*/
+        // Event Listeners
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentCategory = e.target.dataset.category;
+                renderServices();
+            };
+        });
+
+        document.getElementById('search-input').oninput = (e) => {
+            searchQuery = e.target.value;
+            renderServices();
+        };
+
+        // Init
+        lucide.createIcons();
+        renderServices();
+    </script>
+</body>
+</html>

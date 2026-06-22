@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EliteEvents</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @layer base {
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #f8fafc;
+                color: #0f172a;
+            }
+            .font-serif {
+                font-family: 'Playfair Display', serif;
+            }
+        }
+        
+        :root {
+            --gold-600: #b8860b;
+        }
+
+        .text-gold-600 { color: #b8860b; }
+        .bg-gold-600 { background-color: #b8860b; }
+        .hover\:text-gold-600:hover { color: #b8860b; }
+        .hover\:bg-gold-600:hover { background-color: #b8860b; }
+        .border-gold-600 { border-color: #b8860b; }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased" style="display: flex; flex-direction: column; min-height: 100vh; justify-self: space-between;">
+
+    <!-- Navigation -->
+    {% include "navbar.html" %}
+
+    <main class="pt-28 pb-12 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto space-y-8">
+            
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h1 class="text-4xl font-serif font-bold text-slate-900 mb-2">Welcome, {{ user.profile_user.name }} </h1>
+                    {% comment %} <p class="text-slate-500 font-sans">You have 3 events coming up this month.</p> {% endcomment %}
+                </div>
+                {% comment %} {% if user.profile_user.account_type == 'client' %}
+                <i href="{% url "services" %}">
+                    <button class="bg-gold-600 text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-black transition font-bold uppercase tracking-widest text-xs">
+                        <i href="{% url "services" %}" data-lucide="plus" class="w-4 h-4"></i> Plan New Event
+                    </button>
+                </i>
+                {% else %}
+                    <button class="bg-gold-600 text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-black transition font-bold uppercase tracking-widest text-xs">
+                        <i href="{% url "profile" user.profile_user.id %}" data-lucide="plus" class="w-4 h-4"></i> Add New Service 
+                    </button>
+                {% endif %} {% endcomment %}
+            </div>
+
+            {% comment %} <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Stat Card -->
+                <div class="stat-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-yellow-50 text-gold-600 rounded-2xl">
+                            <i data-lucide="calendar" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg">+2 this month</span>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm font-sans uppercase tracking-widest font-semibold">Total Events</p>
+                        <p class="text-3xl font-serif font-bold text-slate-900">12</p>
+                    </div>
+                </div>
+                <div class="stat-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-yellow-50 text-gold-600 rounded-2xl">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg">+15% organic</span>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm font-sans uppercase tracking-widest font-semibold">Total Guests</p>
+                        <p class="text-3xl font-serif font-bold text-slate-900">1.2k</p>
+                    </div>
+                </div>
+                <div class="stat-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-yellow-50 text-gold-600 rounded-2xl">
+                            <i data-lucide="map-pin" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">Top tier</span>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm font-sans uppercase tracking-widest font-semibold">Venues Booked</p>
+                        <p class="text-3xl font-serif font-bold text-slate-900">08</p>
+                    </div>
+                </div>
+                <div class="stat-card bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-yellow-50 text-gold-600 rounded-2xl">
+                            <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg">On track</span>
+                    </div>
+                    <div>
+                        <p class="text-slate-500 text-sm font-sans uppercase tracking-widest font-semibold">Completion</p>
+                        <p class="text-3xl font-serif font-bold text-slate-900">94%</p>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+
+            <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
+                <!-- Main Events List -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 h-full">
+                        {% if user.profile_user.account_type == 'client' %}
+                            <div class="flex items-center justify-between mb-8">
+                                <h3 class="text-2xl font-serif font-bold">Confirmed Events</h3>
+                            </div>
+                        {% else %}
+                            <div class="flex items-center justify-between mb-8">
+                                <h3 class="text-2xl font-serif font-bold">Upcoming Events</h3>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="space-y-6">
+                            {% for booking in bookings %}
+                                {% if booking.status == 'confirmed' %}
+                                <!-- Event Row -->
+                                <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-slate-100 group">
+                                    <div class="flex items-center gap-4">
+                                        <img src="{{booking.service.cover_picture.url}}" class="w-12 h-12 rounded-xl object-cover" alt="">
+                                        <div>
+                                            <h4 class="font-bold text-slate-900 group-hover:text-gold-600 transition-colors font-sans italic"> {{booking.service.title}} ({{booking.consumer.name}}) </h4>
+                                            <p class="text-xs text-slate-500 font-sans"> {{booking.date}} • {{booking.location}} </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-8 text-right hidden sm:flex">
+                                        <div>
+                                            <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Guests</p>
+                                            <p class="font-bold text-slate-700 font-sans text-sm"> {{booking.guests}} </p>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Status</p>
+                                            <p class="font-bold text-sm font-sans text-green-600"> Confirmed </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if booking.status == 'rejected' %}
+                                <!-- Event Row -->
+                                <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-slate-100 group">
+                                    <div class="flex items-center gap-4">
+                                        <img src="{{booking.service.cover_picture.url}}" class="w-12 h-12 rounded-xl object-cover" alt="">
+                                        <div>
+                                            <h4 class="font-bold text-slate-900 group-hover:text-gold-600 transition-colors font-sans italic"> {{booking.service.title}} ({{booking.consumer.name}}) </h4>
+                                            <p class="text-xs text-slate-500 font-sans"> {{booking.date}} • {{booking.location}} </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-8 text-right hidden sm:flex">
+                                        <div>
+                                            <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Guests</p>
+                                            <p class="font-bold text-slate-700 font-sans text-sm"> {{booking.guests}} </p>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Status</p>
+                                            <p class="font-bold text-sm font-sans text-red-600"> Rejected </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                            {% comment %} <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-slate-100 group">
+                                <div class="flex items-center gap-4">
+                                    <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=100&q=80" class="w-12 h-12 rounded-xl object-cover" alt="">
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 group-hover:text-gold-600 transition-colors font-sans italic">Global Tech Summit Gala</h4>
+                                        <p class="text-xs text-slate-500 font-sans">June 12, 2024 • Tokyo, Japan</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-8 text-right hidden sm:flex">
+                                    <div>
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Guests</p>
+                                        <p class="font-bold text-slate-700 font-sans text-sm">1.5k</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Status</p>
+                                        <p class="font-bold text-sm font-sans text-amber-500">Pending</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-slate-100 group">
+                                <div class="flex items-center gap-4">
+                                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=100&q=80" class="w-12 h-12 rounded-xl object-cover" alt="">
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 group-hover:text-gold-600 transition-colors font-sans italic">Vogue Fashion Night</h4>
+                                        <p class="text-xs text-slate-500 font-sans">July 04, 2024 • Milan, Italy</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-8 text-right hidden sm:flex">
+                                    <div>
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Guests</p>
+                                        <p class="font-bold text-slate-700 font-sans text-sm">400</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Status</p>
+                                        <p class="font-bold text-sm font-sans text-green-600">Confirmed</p>
+                                    </div>
+                                </div>
+                            </div> {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+
+
+            <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
+                <!-- Main Events List -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 h-full">
+                        {% if user.profile_user.account_type == 'client' %}
+                            <div class="flex items-center justify-between mb-8">
+                                <h3 class="text-2xl font-serif font-bold">Proposed Events</h3>  
+                            </div>  
+                        {% else %}
+                            <div class="flex items-center justify-between mb-8">
+                                <h3 class="text-2xl font-serif font-bold">Pending Events</h3>  
+                            </div>                            
+                        {% endif %}
+                        
+                        <div class="space-y-6">
+                            {% for booking in bookings %}
+    {% if booking.status == 'pending' %}
+    <!-- Event Row -->
+    <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-slate-100 group">
+        <div class="flex items-center gap-4">
+            <img src="{{booking.service.cover_picture.url}}" 
+                 class="w-12 h-12 rounded-xl object-cover" alt="">
+            <div>
+                <h4 class="font-bold text-slate-900 group-hover:text-gold-600 transition-colors font-sans italic">
+                    {{ booking.service.title }} ({{booking.consumer.name}})
+                </h4>
+                <p class="text-xs text-slate-500 font-sans">
+                    {{ booking.date }} • {{ booking.location }}
+                </p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-8 text-right hidden sm:flex">
+            <div>
+                <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Guests</p>
+                <p class="font-bold text-slate-700 font-sans text-sm">{{ booking.guests }}</p>
+            </div>
+            <div>
+                <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Status</p>
+                <p class="font-bold text-sm font-sans text-amber-500">Pending</p>
+            </div>
+        </div>
+
+        {% if user.profile_user.account_type == 'provider' %}
+        <!-- Action Buttons -->
+        <div class="flex gap-3 ml-6">
+            <!-- Confirm -->
+            <form action="{% url 'confirm_booking' booking.id %}" method="post" 
+                  onsubmit="return confirm('Confirm this booking?');">
+                {% csrf_token %}
+                <button type="submit" 
+                        class="px-4 py-2 bg-green-600 text-white rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-black transition">
+                    Confirm
+                </button>
+            </form>
+
+            <!-- Reject -->
+            <form action="{% url 'reject_booking' booking.id %}" method="post" 
+                  >
+                {% csrf_token %}
+                <button type="submit" 
+                        class="px-4 py-2 bg-red-600 text-white rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-black transition">
+                    Reject
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+{% endfor %}
+                            {% comment %} {% for booking in bookings %}
+                                {% if booking.status == 'pending' %}
+                                <!-- Event Row -->
+                                <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-slate-100 group">
+                                    <div class="flex items-center gap-4">
+                                        <img src="https://images.unsplash.com/photo-1519225495810-7517c52ff548?auto=format&fit=crop&w=100&q=80" class="w-12 h-12 rounded-xl object-cover" alt="">
+                                        <div>
+                                            <h4 class="font-bold text-slate-900 group-hover:text-gold-600 transition-colors font-sans italic"> {{booking.service.title}} </h4>
+                                            <p class="text-xs text-slate-500 font-sans"> {{booking.date}} • {{booking.location}} </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-8 text-right hidden sm:flex">
+                                        <div>
+                                            <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Guests</p>
+                                            <p class="font-bold text-slate-700 font-sans text-sm"> {{booking.guests}} </p>
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Status</p>
+                                            {% if user.profile_user.account_type == 'provider' %}
+                                                <p class="font-bold text-sm font-sans text-amber-500"> <i href="{% url "confirm" booking.id %}">Pending</i> </p>
+                                            {% else %}
+                                                <p class="font-bold text-sm font-sans text-amber-500"> Pending </p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %} {% endcomment %}
+                            {% comment %} <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-slate-100 group">
+                                <div class="flex items-center gap-4">
+                                    <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=100&q=80" class="w-12 h-12 rounded-xl object-cover" alt="">
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 group-hover:text-gold-600 transition-colors font-sans italic">Global Tech Summit Gala</h4>
+                                        <p class="text-xs text-slate-500 font-sans">June 12, 2024 • Tokyo, Japan</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-8 text-right hidden sm:flex">
+                                    <div>
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Guests</p>
+                                        <p class="font-bold text-slate-700 font-sans text-sm">1.5k</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Status</p>
+                                        <p class="font-bold text-sm font-sans text-amber-500">Pending</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-slate-100 group">
+                                <div class="flex items-center gap-4">
+                                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=100&q=80" class="w-12 h-12 rounded-xl object-cover" alt="">
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 group-hover:text-gold-600 transition-colors font-sans italic">Vogue Fashion Night</h4>
+                                        <p class="text-xs text-slate-500 font-sans">July 04, 2024 • Milan, Italy</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-8 text-right hidden sm:flex">
+                                    <div>
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Guests</p>
+                                        <p class="font-bold text-slate-700 font-sans text-sm">400</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 font-sans">Status</p>
+                                        <p class="font-bold text-sm font-sans text-green-600">Confirmed</p>
+                                    </div>
+                                </div>
+                            </div> {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar: Recent Activity -->
+                {% comment %} <div class="space-y-6">
+                    <div class="bg-slate-900 text-white rounded-3xl p-8 shadow-xl h-full">
+                        <h3 class="text-xl font-serif font-bold mb-6">Recent Activity</h3>
+                        <div class="space-y-6">
+                            <div class="flex gap-4">
+                                <div class="mt-1 flex-shrink-0 text-gold-500">
+                                    <i data-lucide="clock" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-sans text-gray-200">Catering contract signed for Sterling Wedding</p>
+                                    <span class="text-[10px] uppercase font-bold text-gray-500 font-sans">2h ago</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="mt-1 flex-shrink-0 text-gold-500">
+                                    <i data-lucide="users" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-sans text-gray-200">Updated guest list for Tech Summit</p>
+                                    <span class="text-[10px] uppercase font-bold text-gray-500 font-sans">5h ago</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="mt-1 flex-shrink-0 text-gold-500">
+                                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-sans text-gray-200">Venue walkthrough in Tokyo completed</p>
+                                    <span class="text-[10px] uppercase font-bold text-gray-500 font-sans">1d ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="w-full mt-8 py-3 border border-slate-700 rounded-xl text-sm font-bold uppercase tracking-widest hover:border-gold-600 transition">
+                            Full Activity log
+                        </button>
+                    </div>
+                </div> {% endcomment %}
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white pt-16 pb-8 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-400 text-sm font-sans">
+            &copy; 2026 EliteEvents Solutions. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

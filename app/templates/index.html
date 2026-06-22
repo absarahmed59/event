@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteEvents - Premium Event Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @layer base {
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #f8fafc;
+                color: #0f172a;
+            }
+            .font-serif {
+                font-family: 'Playfair Display', serif;
+            }
+        }
+        
+        :root {
+            --gold-600: #b8860b;
+        }
+
+        .text-gold-600 { color: #b8860b; }
+        .bg-gold-600 { background-color: #b8860b; }
+        .hover\:text-gold-600:hover { color: #b8860b; }
+        .hover\:bg-gold-600:hover { background-color: #b8860b; }
+        .border-gold-600 { border-color: #b8860b; }
+
+        .bg-gold-gradient {
+            background: linear-gradient(135deg, #d4af37 0%, #f9f295 50%, #b8860b 100%);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 10px;
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    {% include "navbar.html" %}
+
+    <main class="pt-20">
+        <!-- Hero Section -->
+        <section class="relative h-screen flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img 
+                    src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
+                    class="w-full h-full object-cover" 
+                    alt="Hero Background"
+                >
+                <div class="absolute inset-0 bg-black/50"></div>
+            </div>
+
+            <div class="relative z-10 text-center px-4 fade-in">
+                <h4 class="text-gold-500 uppercase tracking-[0.3em] mb-4 font-semibold text-yellow-500">Crafting Unforgettable Moments</h4>
+                <h1 class="text-5xl md:text-8xl text-white font-serif font-bold mb-6 leading-tight">Elevating Every <br> Detail.</h1>
+                <p class="text-gray-200 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light">
+                    Premium event planning services for weddings, corporate galas, and luxury private parties.
+                </p>
+                <div class="flex flex-col md:flex-row gap-4 justify-center">
+                    <a href="#services" class="bg-gold-600 text-white px-10 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-black transition-all">Our Services</a>
+                    {% comment %} <a href="signup.html" class="border-2 border-white text-white px-10 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-black transition-all">Get a Quote</a> {% endcomment %}
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-16 fade-in">
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold mb-4 text-slate-900">Our Expertise</h2>
+                    <div class="w-24 h-1 bg-gold-600 mx-auto"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Grand Weddings -->
+                    <a href="{% url "services" %}">
+                        <div class="group cursor-pointer fade-in">
+                            <div class="relative overflow-hidden rounded-2xl mb-6">
+                                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover transition duration-500 group-hover:scale-110" alt="Grand Weddings">
+                            </div>
+                            <h3 class="text-2xl font-serif font-bold mb-2 text-slate-900">Grand Weddings</h3>
+                            <p class="text-gray-600 font-sans text-sm">From fairy-tale decor to seamless coordination, we make your special day timeless.</p>
+                        </div>
+                    </a>
+                    <!-- Corporate Events -->
+                    <a href="{% url "services" %}">
+                    <div class="group cursor-pointer fade-in" style="animation-delay: 0.1s;">
+                        <div class="relative overflow-hidden rounded-2xl mb-6">
+                            <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover transition duration-500 group-hover:scale-110" alt="Corporate Events">
+                        </div>
+                        <h3 class="text-2xl font-serif font-bold mb-2 text-slate-900">Corporate Events</h3>
+                        <p class="text-gray-600 font-sans text-sm">Professional conferences, product launches, and annual galas tailored to your brand.</p>
+                    </div>
+                    </a>
+                    <!-- Private Parties -->
+                    <a href="{% url "services" %}">
+                    <div class="group cursor-pointer fade-in" style="animation-delay: 0.2s;">
+                        <div class="relative overflow-hidden rounded-2xl mb-6">
+                            <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80" class="w-full h-64 object-cover transition duration-500 group-hover:scale-110" alt="Private Parties">
+                        </div>
+                        <h3 class="text-2xl font-serif font-bold mb-2 text-slate-900">Private Parties</h3>
+                        <p class="text-gray-600 font-sans text-sm">Birthdays, anniversaries, and themed parties that leave your guests in awe.</p>
+                    </div>
+                    </a>    
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us -->
+        {% comment %} <section id="about" class="py-20 bg-slate-900 text-white overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center gap-16">
+                <div class="w-full md:w-1/2 fade-in">
+                    <img src="https://images.unsplash.com/photo-1519225495810-7517c52ff548?auto=format&fit=crop&w=1000&q=80" class="rounded-3xl shadow-2xl border-4 border-gold-600/30" alt="Elite Events Team">
+                </div>
+                <div class="w-full md:w-1/2 fade-in">
+                    <h2 class="text-4xl font-serif font-bold mb-6">Why Choose EliteEvents?</h2>
+                    <p class="text-gray-400 mb-8 leading-relaxed font-sans">
+                        Inspired by the best in the industry, we bring a modern approach to traditional event planning. Our team handles everything from venue selection to the last guest's departure.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3 italic text-gray-300 font-sans">
+                            <i data-lucide="check" class="text-gold-500 w-6 h-6"></i> 10+ Years of Excellence
+                        </li>
+                        <li class="flex items-center gap-3 italic text-gray-300 font-sans">
+                            <i data-lucide="check" class="text-gold-500 w-6 h-6"></i> Custom Decor & Styling
+                        </li>
+                        <li class="flex items-center gap-3 italic text-gray-300 font-sans">
+                            <i data-lucide="check" class="text-gold-500 w-6 h-6"></i> Vendor Management & Coordination
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section> {% endcomment %}
+
+        {% comment %} <!-- CTA Section -->
+        <section class="py-20 bg-gold-gradient text-center">
+            <div class="max-w-4xl mx-auto px-4 fade-in">
+                <h2 class="text-4xl font-serif font-bold text-gray-900 mb-6">Ready to create your dream event?</h2>
+                <p class="text-gray-800 text-lg mb-10">Don't settle for ordinary. Let's make it extraordinary together.</p>
+                <a href="signup.html" class="inline-block bg-black text-white px-12 py-5 rounded-full text-xl font-bold hover:scale-105 transition-transform">Contact Us Today</a>
+            </div>
+        </section> {% endcomment %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white pt-16 pb-8 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div class="col-span-1 md:col-span-1">
+                <span class="text-2xl font-bold font-serif">ELITE<span class="text-gold-600">EVENTS</span></span>
+                <p class="mt-4 text-gray-500 font-sans text-sm">Luxury event solutions for your most precious moments.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 uppercase tracking-widest text-sm font-sans">Links</h4>
+                <ul class="space-y-2 text-gray-600 font-sans text-sm">
+                    <li><a href="#" class="hover:text-gold-600 transition">Portfolio</a></li>
+                    <li><a href="#" class="hover:text-gold-600 transition">Testimonials</a></li>
+                    <li><a href="#" class="hover:text-gold-600 transition">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 uppercase tracking-widest text-sm font-sans">Services</h4>
+                <ul class="space-y-2 text-gray-600 font-sans text-sm">
+                    <li>Wedding Planning</li>
+                    <li>Catering Services</li>
+                    <li>Stage Lighting</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 uppercase tracking-widest text-sm font-sans">Contact</h4>
+                <div class="text-gray-600 font-sans space-y-3 text-sm">
+                    <div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-gold-600"></i> 123 Event Street, City Central</div>
+                    <div class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4 text-gold-600"></i> contact@eliteevents.com</div>
+                    <div class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-gold-600"></i> +1 234 567 890</div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-gray-400 text-sm border-t pt-8 font-sans">
+            &copy; 2026 EliteEvents Solutions. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Simple Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    entry.target.style.opacity = 1;
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = 0;
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<nav class="fixed w-full z-50 glass-nav border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-20 items-center">
+            <a href="/" class="flex-shrink-0">
+                <span class="text-3xl font-bold tracking-tighter text-gray-900 font-serif">
+                    ELITE<span class="text-gold-600">EVENTS</span>
+                </span>
+            </a>
+            <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-8 text-sm font-medium uppercase tracking-widest">
+                    {% if user.is_authenticated %}
+                        <a href="/" class="hover:text-gold-600 transition">Home</a>
+                        <a href="/services/" class="hover:text-gold-600 transition">Services</a>
+                        {% if user.profile_user.account_type == "provider" %}
+                            <a href="/dashboard/" class="hover:text-gold-600 transition">Dashboard</a>
+                            <a href="/profile/{{ user.profile_user.id }}/" class="hover:text-gold-600 transition">Profile</a>
+                        {% else %}
+                            <a href="/dashboard/" class="hover:text-gold-600 transition">My Events</a>
+                        {% endif %}
+                        <a href="/login/" class="bg-gold-600 text-white px-6 py-3 rounded-full hover:bg-black transition text-center min-w-[120px]">
+                            Book Now
+                        </a>
+                        
+                        <!-- Logout Button -->
+                        <form action="{% url 'logout' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" 
+                                    class="bg-red-600 text-white px-6 py-3 rounded-full hover:bg-black transition text-center min-w-[120px]">
+                                Logout
+                            </button>
+                        </form>
+                    {% else %}
+                        <a href="/" class="hover:text-gold-600 transition">Home</a>
+                        <a href="/services/" class="hover:text-gold-600 transition">Services</a>
+                        <a href="/login/" class="bg-gold-600 text-white px-6 py-3 rounded-full hover:bg-black transition text-center min-w-[120px]">
+                            Book Now
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

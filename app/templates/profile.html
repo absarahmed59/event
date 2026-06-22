@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - EliteEvents</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @layer base {
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #ffffff;
+                color: #0f172a;
+            }
+            .font-serif {
+                font-family: 'Playfair Display', serif;
+            }
+        }
+        
+        :root {
+            --gold-600: #b8860b;
+        }
+
+        .text-gold-600 { color: #b8860b; }
+        .bg-gold-600 { background-color: #b8860b; }
+        .hover\:text-gold-600:hover { color: #b8860b; }
+        .hover\:bg-gold-600:hover { background-color: #b8860b; }
+        .border-gold-600 { border-color: #b8860b; }
+
+        .bg-gold-gradient {
+            background: linear-gradient(135deg, #d4af37 0%, #f9f295 50%, #b8860b 100%);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .input-underlined {
+            border: none;
+            border-bottom: 2px solid #e2e8f0;
+            background: transparent;
+            transition: border-color 0.3s ease;
+        }
+        .input-underlined:focus {
+            outline: none;
+            border-color: #b8860b;
+        }
+
+        #create-service-section {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease;
+            opacity: 0;
+        }
+        #create-service-section.active {
+            max-height: 2000px;
+            opacity: 1;
+            margin-bottom: 4rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-nav border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <a href="index.html" class="flex-shrink-0">
+                    <span class="text-3xl font-bold tracking-tighter text-gray-900 font-serif">
+                        ELITE<span class="text-gold-600">EVENTS</span>
+                    </span>
+                </a>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8 text-sm font-medium uppercase tracking-widest text-xs">
+                        <a href="/" class="hover:text-gold-600 transition">Home</a>
+                        <a href="/services/" class="hover:text-gold-600 transition">Services</a>
+                        <a href="/dashboard/" class="hover:text-gold-600 transition">Dashboard</a>
+                        <a href="/profile/" class="hover:text-gold-600 transition">Profile</a>
+                        <a href="/login/" class="bg-gold-600 text-white px-6 py-3 rounded-full hover:bg-black transition text-center min-w-[120px]">
+                            Book Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-20">
+        <!-- Planner Header -->
+        <section class="relative h-[60vh] bg-slate-900 overflow-hidden">
+            <div class="absolute inset-0 opacity-40">
+                <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1920&q=80" class="w-full h-full object-cover" alt="Planner Portfolio">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
+            
+            <div class="absolute bottom-0 left-0 w-full p-8 md:p-16">
+                <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center md:items-end gap-8">
+                    <div class="relative">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" class="w-40 h-40 md:w-56 md:h-56 rounded-full border-8 border-slate-900 object-cover shadow-2xl" alt="{{ profile.name }}">
+                        {% else %}
+                            <img src="{% static "/assets/default_profile_picture.jpg" %}" class="w-40 h-40 md:w-56 md:h-56 rounded-full border-8 border-slate-900 object-cover shadow-2xl" alt="{{ profile.name }}">
+                        {% endif %}
+                        <div class="absolute bottom-2 right-2 bg-gold-600 p-2 rounded-full border-4 border-slate-900">
+                            <i data-lucide="check" class="text-white w-5 h-5"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center md:text-left text-white mb-4">
+                        <h1 class="text-4xl md:text-6xl font-serif font-bold"> {{profile.name}} </h1>
+                        <p class="text-gold-500 font-sans font-semibold uppercase tracking-[0.2em] text-sm mt-2"> {{profile.tagline}} | {{profile.contact}} </p>
+                        <button id="open-profile-drawer" 
+                                class="px-6 py-3 bg-gold-600 text-white rounded-full hover:bg-black transition">
+                            Edit Profile
+                        </button>
+                        {% comment %} <div class="flex justify-center md:justify-start gap-6 mt-6 text-gray-300">
+                            <a href="#" class="hover:text-gold-500 transition-colors p-2 border border-white/20 rounded-full hover:border-gold-500"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                            <a href="#" class="hover:text-gold-500 transition-colors p-2 border border-white/20 rounded-full hover:border-gold-500"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                            <a href="#" class="hover:text-gold-500 transition-colors p-2 border border-white/20 rounded-full hover:border-gold-500"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                        </div> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Planner Stats & Bio -->
+        <section class="py-16 bg-slate-50 border-b border-slate-200 px-8">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <div class="lg:col-span-1">
+                    <h2 class="text-2xl font-serif font-bold text-slate-900 mb-6 underline decoration-gold-600 underline-offset-8">About My Vision</h2>
+                    <p class="text-slate-600 font-sans leading-relaxed text-lg italic">
+                        {{profile.description}}
+                    </p>
+                </div>
+                <div class="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-8">
+                    {% comment %} <div class="text-center md:text-left">
+                        <p class="text-3xl md:text-4xl font-serif font-bold text-slate-900">14</p>
+                        <p class="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mt-1">Global Awards</p>
+                    </div> {% endcomment %}
+                    <div class="text-center md:text-left">
+                        <p class="text-3xl md:text-4xl font-serif font-bold text-slate-900"> {{profile.booking_provider.count}} </p>
+                        <p class="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mt-1">Events Hosted</p>
+                    </div>
+                    {% comment %} <div class="text-center md:text-left">
+                        <p class="text-3xl md:text-4xl font-serif font-bold text-slate-900"> {{profile.dashboard_profile.performance}} </p>
+                        <p class="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mt-1">Average Rating</p>
+                    </div> {% endcomment %}
+                    <div class="text-center md:text-left">
+                        <p class="text-3xl md:text-4xl font-serif font-bold text-slate-900"> {{profile.created_at | date:"M, Y"}} </p>
+                        <p class="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mt-1">Years Joined</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Signature Packages -->
+        <section class="py-24 max-w-7xl mx-auto px-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-6">
+                <div>
+                    <h2 class="text-4xl font-serif font-bold text-slate-900">Signature Packages</h2>
+                    <div class="w-20 h-1 bg-gold-600 mt-2"></div>
+                </div>
+                <button onclick="toggleCreateService()" class="inline-flex items-center gap-2 bg-slate-900 text-white px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-gold-600 transition-all shadow-lg group">
+                    <i data-lucide="plus-circle" class="w-5 h-5 group-hover:rotate-90 transition-transform"></i>
+                    <span>List New Service</span>
+                </button>
+            </div>
+
+            <!-- New Service Creation Section (Collapsed by default) -->
+            <div id="create-service-section">
+                <div class="bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl border border-slate-100 flex flex-col lg:flex-row gap-16">
+                    <!-- Form -->
+                    <div class="flex-1 space-y-10">
+                        <div>
+                            <h3 class="text-3xl font-serif font-bold text-slate-900 mb-2">Create New Offering</h3>
+                            <p class="text-slate-500 font-sans">Craft a new signature experience for your portfolio.</p>
+                        </div>
+                        
+                        <form id="create-service-form" class="space-y-8" enctype="multipart/form-data" method="POST" action="{% url 'create_service' %}">
+                            {% csrf_token %}
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Package Title</label>
+                                    <input name="title" type="text" id="service-title" class="w-full py-4 input-underlined font-serif text-xl placeholder:italic" placeholder="e.g. Venetian Masked Ball" required>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Starting At</label>
+                                    <div class="relative">
+                                        <span class="absolute left-0 top-1/2 -translate-y-1/2 text-slate-400 font-serif">$</span>
+                                        <input name="price" type="number" id="service-price" class="w-full py-4 pl-5 input-underlined font-serif text-xl" placeholder="5500" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Description</label>
+                                <textarea name="description" id="service-desc" rows="3" class="w-full py-4 input-underlined font-sans resize-none" placeholder="The essence of this experience..." required></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Upload Cover Image</label>
+                                    <div class="relative group/upload">
+                                        <input name="cover_picture" type="file" id="service-img" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                                        <div class="w-full py-4 border-b-2 border-slate-200 group-hover/upload:border-gold-600 transition-colors flex items-center justify-between">
+                                            <span id="file-name" class="font-sans text-xs text-slate-400 truncate">Choose high-res image...</span>
+                                            <i data-lucide="upload-cloud" class="w-4 h-4 text-slate-300 group-hover/upload:text-gold-600 transition-colors"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Category Tag</label>
+                                    <input name="tags" type="text" id="service-tags" class="w-full py-4 input-underlined font-sans text-xs" placeholder="Gala, Themed, Grand">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Category</label>
+                                    <select name="category" id="service-category" class="w-full py-4 input-underlined font-sans text-xs" required>
+                                        <option value="Other">Other</option>
+                                        <option value="Wedding">Wedding</option>
+                                        <option value="Corporate">Corporate</option>
+                                        <option value="Private">Private</option>
+                                        <!-- Add more categories as needed -->
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
+                                    Extra Add-ons (per person)
+                                </label>
+                                <div id="addons-container" class="space-y-4">
+                                    <!-- Dynamic addon fields will appear here -->
+                                </div>
+                                <button type="button" id="add-addon-btn" 
+                                    class="mt-2 px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-widest hover:bg-slate-50">
+                                    + Add Add-on
+                                </button>
+                            </div>
+
+                            <div class="flex gap-4 pt-4">
+                                <button type="submit" class="flex-1 bg-gold-600 text-white py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-black transition-colors flex items-center justify-center gap-2">
+                                    Publish to Portfolio <i data-lucide="send" class="w-4 h-4"></i>
+                                </button>
+                                <button type="button" class="px-8 py-5 rounded-2xl border-2 border-slate-100 text-slate-400 font-bold uppercase tracking-widest text-[10px] hover:bg-slate-50 transition-colors">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Sidebar Preview -->
+                    <div class="w-full lg:w-80">
+                        <div class="sticky top-8">
+                            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 mb-6 text-center italic">Live Preview</p>
+                            
+                            <div class="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-xl">
+                                <div class="relative h-48 overflow-hidden bg-slate-50 flex items-center justify-center border-b border-slate-50">
+                                    <img id="preview-img" src="" class="w-full h-full object-cover hidden">
+                                    <div id="preview-placeholder" class="text-slate-200">
+                                        <i data-lucide="image" class="w-12 h-12"></i>
+                                    </div>
+                                    <div class="absolute top-3 right-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest text-slate-900 shadow-sm">
+                                        From $<span id="preview-price">---</span>
+                                    </div>
+                                </div>
+                                <div class="p-6">
+                                    
+                                    <div class="p-6">
+                                        <div id="preview-tags" class="flex gap-2 mb-3">
+                                            <span class="text-[9px] uppercase font-bold text-gold-600 tracking-wider">#Preview</span>
+                                        </div>
+                                        <h4 id="preview-title" class="text-xl font-serif font-bold text-slate-900 mb-2 truncate">New Suite</h4>
+                                        <p id="preview-desc" class="text-slate-500 font-sans text-xs mb-6 line-clamp-2 italic">Your description details will float here...</p>
+
+                                        <!-- Add-ons Preview -->
+                                        <div id="preview-addons" class="space-y-2 mb-4">
+                                            <!-- Dynamic add-ons will appear here -->
+                                        </div>
+
+                                        <div class="flex items-center justify-between w-full p-3 bg-slate-50 rounded-xl">
+                                            <span class="font-bold uppercase tracking-widest text-[9px]">Tune Package</span>
+                                            <i data-lucide="arrow-right" class="w-4 h-4 text-gold-600"></i>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10">
+                <!-- Package 1 -->
+                {% for service in services %}
+<div class="service-card bg-white rounded-3xl overflow-hidden border border-gray-100 fade-in" style="animation-delay: {{ forloop.counter0|add:"0.05" }}s">
+    <div class="relative h-64 overflow-hidden">
+        {% if service.cover_picture %}
+            <img src="{{service.cover_picture.url}}" class="w-full h-full object-cover" alt="{{service.title}}">
+        {% endif %}
+        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900 shadow-sm">
+            ${{ service.costs }}
+        </div>
+    </div>
+    <div class="p-8">
+        <div class="flex gap-3 mb-4">
+            {# Example tags if needed #}
+            {# {% for tag in service.tags %}<span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#{{tag}}</span>{% endfor %} #}
+        </div>
+        <h3 class="text-2xl font-serif font-bold text-slate-900 mb-3"> {{service.title}} </h3>
+        <p class="text-slate-500 font-sans text-sm mb-8 leading-relaxed line-clamp-2"> {{service.description}} </p>
+        
+        <div class="flex items-center justify-between">
+            <a href="{% url 'package' service.id %}" 
+               class="inline-flex items-center gap-2 font-bold uppercase tracking-widest text-xs text-gold-600 hover:text-black transition">
+                Tune My Package <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+            
+            <!-- Delete Button -->
+            <form action="{% url 'delete_service' service.id %}" method="post" 
+                  onsubmit="return confirm('Are you sure you want to delete this service?');">
+                {% csrf_token %}
+                <button type="submit" 
+                        class="text-red-600 hover:text-black transition inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i> Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+                {% comment %} <!-- Package 2 -->
+                <div class="bg-white group cursor-default border border-slate-100 hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Corporate Excellence">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-1 rounded-full text-slate-900 text-xs font-bold uppercase tracking-widest shadow-lg">
+                            From $8,000
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex gap-2 mb-4">
+                            <span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#Logistics</span>
+                            <span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#Branding</span>
+                            <span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#Networking</span>
+                        </div>
+                        <h3 class="text-2xl font-serif font-bold text-slate-900 mb-4 group-hover:text-gold-600 transition-colors">Corporate Excellence Gala</h3>
+                        <p class="text-slate-500 font-sans text-sm mb-8 leading-relaxed line-clamp-3">Professional event management for high-stakes corporate gatherings.</p>
+                        <a href="packagetuning.html?packageId=corp-gala" class="flex items-center justify-between w-full p-4 bg-slate-50 rounded-2xl group/btn hover:bg-gold-600 transition-colors duration-300">
+                            <span class="font-bold uppercase tracking-[0.2em] text-[10px] group-hover/btn:text-white transition-colors">Tune My Package</span>
+                            <i data-lucide="arrow-right" class="w-5 h-5 text-gold-600 group-hover/btn:text-white transition-colors"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Package 3 -->
+                <div class="bg-white group cursor-default border border-slate-100 hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Private Soiree">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-1 rounded-full text-slate-900 text-xs font-bold uppercase tracking-widest shadow-lg">
+                            From $3,500
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div class="flex gap-2 mb-4">
+                            <span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#Intimate</span>
+                            <span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#Decor</span>
+                            <span class="text-[10px] uppercase font-bold text-gold-600 tracking-wider">#20-50 Guests</span>
+                        </div>
+                        <h3 class="text-2xl font-serif font-bold text-slate-900 mb-4 group-hover:text-gold-600 transition-colors">Intimate Private Soiree</h3>
+                        <p class="text-slate-500 font-sans text-sm mb-8 leading-relaxed line-clamp-3">Exclusive private parties designed with intimacy and luxury in mind.</p>
+                        <a href="packagetuning.html?packageId=private-soiree" class="flex items-center justify-between w-full p-4 bg-slate-50 rounded-2xl group/btn hover:bg-gold-600 transition-colors duration-300">
+                            <span class="font-bold uppercase tracking-[0.2em] text-[10px] group-hover/btn:text-white transition-colors">Tune My Package</span>
+                            <i data-lucide="arrow-right" class="w-5 h-5 text-gold-600 group-hover/btn:text-white transition-colors"></i>
+                        </a>
+                    </div>
+                </div> {% endcomment %}
+            </div>
+        </section>
+
+        <!-- Trust Banner -->
+        {% comment %} <section class="py-20 bg-slate-900 text-center px-8">
+            <h3 class="text-2xl md:text-3xl text-white font-serif mb-8 italic">Interested in a custom consultation?</h3>
+            <button class="bg-gold-gradient text-slate-900 px-10 py-4 rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-transform">
+                Start Conversation
+            </button>
+        </section> {% endcomment %}
+    </main>
+
+    <!-- Profile Edit Slider Drawer -->
+    <div id="profile-drawer" 
+        class="fixed top-0 right-0 h-full w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-500 z-50">
+        
+        <!-- Drawer Header -->
+        <div class="flex justify-between items-center p-4 border-b border-slate-200">
+            <h2 class="text-xl font-bold text-slate-900">Edit Profile</h2>
+            <button id="close-profile-drawer" class="text-slate-500 hover:text-black">
+                ✕
+            </button>
+        </div>
+
+        <!-- Drawer Content -->
+        <div class="p-6 space-y-4">
+            <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label class="block">
+                    <span class="text-sm font-semibold text-slate-700">Name</span>
+                    <input name="name" type="text" class="mt-1 w-full border rounded-lg p-2" value="{{profile.name}}" >
+                </label>
+
+            <label class="block">
+                <span class="text-sm font-semibold text-slate-700">Tagline</span>
+                <input name="tagline" type="text" class="mt-1 w-full border rounded-lg p-2" value="{{profile.tagline}}" >
+            </label>
+            
+            <label class="block">
+                <span class="text-sm font-semibold text-slate-700">Location</span>
+                <input name="location" type="text" class="mt-1 w-full border rounded-lg p-2" value="{{profile.location}}" >
+            </label>
+
+            <label class="block">
+                <span class="text-sm font-semibold text-slate-700">Contact</span>
+                <input name="contact" type="text" class="mt-1 w-full border rounded-lg p-2" value="{{profile.contact}}" >
+            </label>
+            
+            <label class="block">
+                <span class="text-sm font-semibold text-slate-700">Description</span>
+                <textarea name="description" class="mt-1 w-full border rounded-lg p-2" rows="4" >{{profile.description}}</textarea>
+            </label>
+            
+            <label class="block">
+                <span class="text-sm font-semibold text-slate-700">Profile Picture</span>
+                <input name="profile_picture" type="file" class="mt-1 w-full border rounded-lg p-2">
+            </label>
+            
+            <button type="submit" class="w-full bg-gold-600 text-white py-3 rounded-lg hover:bg-black transition">
+                Save Changes
+            </button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="bg-white pt-16 pb-8 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-400 text-sm font-sans">
+            &copy; 2026 EliteEvents Solutions. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Overlay -->
+    <div id="drawer-overlay" class="fixed inset-0 bg-black/50 hidden z-40">
+
+    <script>
+        lucide.createIcons();
+
+        function toggleCreateService() {
+            const section = document.getElementById('create-service-section');
+            section.classList.toggle('active');
+            if (section.classList.contains('active')) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Live Preview Logic
+        const titleIn = document.getElementById('service-title');
+        const priceIn = document.getElementById('service-price');
+        const descIn = document.getElementById('service-desc');
+        const imgIn = document.getElementById('service-img');
+        const tagsIn = document.getElementById('service-tags');
+        const fileNameDisp = document.getElementById('file-name');
+
+        const pTitle = document.getElementById('preview-title');
+        const pPrice = document.getElementById('preview-price');
+        const pDesc = document.getElementById('preview-desc');
+        const pImg = document.getElementById('preview-img');
+        const pPlaceholder = document.getElementById('preview-placeholder');
+        const pTags = document.getElementById('preview-tags');
+
+        {% comment %} function updatePreview() {
+            pTitle.innerText = titleIn.value || "New Suite Title";
+            pPrice.innerText = priceIn.value ? parseInt(priceIn.value).toLocaleString() : "---";
+            pDesc.innerText = descIn.value || "Your description details will float here...";
+            
+            const tags = tagsIn.value.split(',').map(t => t.trim()).filter(t => t !== "");
+            pTags.innerHTML = (tags.length > 0 ? tags : ['New']).map(t => 
+                `<span class="text-[9px] uppercase font-bold text-gold-600 tracking-wider">#${t}</span>`
+            ).join('');
+        } {% endcomment %}
+        function updatePreview() {
+            pTitle.innerText = titleIn.value || "New Suite Title";
+            pPrice.innerText = priceIn.value ? parseInt(priceIn.value).toLocaleString() : "---";
+            pDesc.innerText = descIn.value || "Your description details will float here...";
+
+            const tags = tagsIn.value.split(',').map(t => t.trim()).filter(t => t !== "");
+            pTags.innerHTML = (tags.length > 0 ? tags : ['New']).map(t => 
+                `<span class="text-[9px] uppercase font-bold text-gold-600 tracking-wider">#${t}</span>`
+            ).join('');
+
+            // Add-ons preview
+            const addonFields = addonsContainer.querySelectorAll(".addon-field");
+            let addonsHTML = "";
+            addonFields.forEach(field => {
+                const name = field.querySelector(".addon-name").value;
+                const rate = field.querySelector(".addon-rate").value;
+                if (name && rate) {
+                    addonsHTML += `<div class="flex justify-between text-xs text-slate-600">
+                        <span>${name}</span>
+                        <span>$${rate}/person</span>
+                    </div>`;
+                }
+            });
+            pAddons.innerHTML = addonsHTML || `<span class="text-xs text-slate-400 italic">No add-ons yet...</span>`;
+        }
+
+        imgIn.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileNameDisp.innerText = file.name;
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    pImg.src = event.target.result;
+                    pImg.classList.remove('hidden');
+                    pPlaceholder.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                fileNameDisp.innerText = "Choose high-res image...";
+                pImg.src = "";
+                pImg.classList.add('hidden');
+                pPlaceholder.classList.remove('hidden');
+            }
+        });
+
+        [titleIn, priceIn, descIn, tagsIn].forEach(input => {
+            input.addEventListener('input', updatePreview);
+        });
+
+        const drawer = document.getElementById("profile-drawer");
+        const overlay = document.getElementById("drawer-overlay");
+        const openBtn = document.getElementById("open-profile-drawer");
+        const closeBtn = document.getElementById("close-profile-drawer");
+
+        openBtn.addEventListener("click", () => {
+            drawer.classList.remove("translate-x-full");
+            overlay.classList.remove("hidden");
+        });
+
+        closeBtn.addEventListener("click", () => {
+            drawer.classList.add("translate-x-full");
+            overlay.classList.add("hidden");
+        });
+
+        overlay.addEventListener("click", () => {
+            drawer.classList.add("translate-x-full");
+            overlay.classList.add("hidden");
+        });
+
+
+{% comment %}         
+        const addonsContainer = document.getElementById("addons-container");
+        const addAddonBtn = document.getElementById("add-addon-btn");
+
+        function createAddonField() {
+            const wrapper = document.createElement("div");
+            wrapper.className = "grid grid-cols-2 gap-4";
+
+            wrapper.innerHTML = `
+                <input type="text" name="addon_name[]" 
+                    placeholder="Addon name (e.g. Fireworks)" 
+                    class="w-full py-3 input-underlined font-sans text-sm" required>
+                <input type="number" name="addon_rate[]" 
+                    placeholder="Rate per person (e.g. 50)" 
+                    class="w-full py-3 input-underlined font-sans text-sm" required>
+            `;
+
+            addonsContainer.appendChild(wrapper);
+        } {% endcomment %}
+
+
+        const addonsContainer = document.getElementById("addons-container");
+        const addAddonBtn = document.getElementById("add-addon-btn");
+        const pAddons = document.getElementById("preview-addons");
+        let addonCount = 0;
+
+        function createAddonField() {
+            if(addonCount >= 5) {
+                return;
+            }
+            addonCount++;
+            const wrapper = document.createElement("div");
+            wrapper.className = "grid grid-cols-2 gap-4 addon-field";
+
+            wrapper.innerHTML = `
+                <input type="text" name="addon_name${addonCount}" 
+                    placeholder="Addon name (e.g. Fireworks)" 
+                    class="w-full py-3 input-underlined font-sans text-sm addon-name">
+                <input type="number" name="addon_rate${addonCount}" 
+                    placeholder="Rate per person (e.g. 50)" 
+                    class="w-full py-3 input-underlined font-sans text-sm addon-rate">
+            `;
+
+            addonsContainer.appendChild(wrapper);
+
+            // Add listener to update preview when typing
+            wrapper.querySelectorAll("input").forEach(input => {
+                input.addEventListener("input", updatePreview);
+            });
+        }
+
+        // First field by default
+        createAddonField();
+
+        // Add new field on button click
+        addAddonBtn.addEventListener("click", createAddonField);
+
+        // First field by default
+        createAddonField();
+
+        // Add new field on button click
+        addAddonBtn.addEventListener("click", createAddonField);
+
+
+
+
+
+
+        /*
+        document.getElementById('create-service-form').onsubmit = (e) => {
+            e.preventDefault();
+            alert("Success! Your new signature package has been added to your profile.");
+            location.reload();
+        };
+        */
+    </script>
+</body>
+</html>
